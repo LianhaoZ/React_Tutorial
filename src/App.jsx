@@ -31,7 +31,11 @@ const schedule = {
     }
   }
 };
-  
+
+const Banner = ({ title }) => (
+  <h1>{title}</h1>
+);
+
 const CourseList = ({ courses }) => (
   <div className="course-list">
     {Object.entries(courses).map(([id, course]) => (
@@ -49,7 +53,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1>{schedule.title}</h1>
+      <Banner title = {schedule.title} />
       <CourseList courses={schedule.courses} />
     </div>
   );
