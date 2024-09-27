@@ -31,7 +31,23 @@ const schedule = {
     }
   }
 };
- 
+
+const Banner = ({ title }) => (
+  <h1>{title}</h1>
+);
+
+const CourseList = ({ courses }) => (
+  <div className="course-list">
+    {Object.entries(courses).map(([id, course]) => (
+      <div key={id} className="course">
+        {course.term} CS {course.number}: {course.title}
+        <br />
+        <small>Meets: {course.meets}</small>
+      </div>
+    ))}
+  </div>
+);
+
 
 const App = () => { 
 
