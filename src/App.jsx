@@ -28,6 +28,18 @@ const schedule = {
       "number": "314",
       "meets" : "TuTh 9:30-10:50",
       "title" : "Tech & Human Interaction"
+    }, 
+    "S315" : {
+      "term": "Spring",
+      "number": "334",
+      "meets" : "TuTh 9:30-10:50",
+      "title" : "Tech & Human Interaction"
+    }, 
+    "S317" : {
+      "term": "Spring",
+      "number": "324",
+      "meets" : "TuTh 9:30-10:50",
+      "title" : "Tech & Human Interaction"
     }
   }
 };
@@ -36,28 +48,29 @@ const Banner = ({ title }) => (
   <h1>{title}</h1>
 );
 
+const CourseCard = ({ course }) => (
+  <div className="course-card">
+    <div className="course-number">{course.term} CS {course.number}</div>
+    <div className="course-title">{course.title}</div>
+    <div className="course-time">{course.meets}</div>
+  </div>
+);
+
 const CourseList = ({ courses }) => (
   <div className="course-list">
     {Object.entries(courses).map(([id, course]) => (
-      <div key={id} className="course">
-        {course.term} CS {course.number}: {course.title}
-        <br />
-        <small>Meets: {course.meets}</small>
-      </div>
+      <CourseCard key={id} course={course} />
     ))}
   </div>
 );
 
-
 const App = () => { 
-
   return (
     <div className="container">
-      <Banner title = {schedule.title} />
+      <Banner title={schedule.title} />
       <CourseList courses={schedule.courses} />
     </div>
   );
 };
 
 export default App;
- 
