@@ -17,32 +17,57 @@ const CourseCard = ({ course }) => (
   </div>
 );
 
-const CourseList = ({ courses }) => (
-  <div className="course-list">
-    {Object.entries(courses).map(([id, course]) => (
-      <CourseCard key={id} course={course} />
+const CourseList = ({ courses, selectedTerm }) => {
+  const filteredCourses = selectedTerm
+    ? Object.entries(courses).filter(([id, course]) => course.term === selectedTerm)
+    : Object.entries(courses);
+
+  return (
+    <div className="course-list">
+      {filteredCourses.map(([id, course]) => (
+        <CourseCard key={id} course={course} />
+      ))}
+    </div>
+  );
+};
+
+const TermSelector = ({ selectedTerm, setSelectedTerm }) => (
+  <div className="term-selector">
+    {['Fall', 'Winter', 'Spring'].map(term => (
+      <button
+        key={term}
+        className={`term-button ${selectedTerm === term ? 'selected' : ''}`}
+        onClick={() => setSelectedTerm(selectedTerm === term ? null : term)}
+      >
+        {term}
+      </button>
     ))}
   </div>
 );
 
 const Main = () => { 
+  const [selectedTerm, setSelectedTerm] = useState(null);
   const [courseData, isCourseLoading, courseError] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
- 
+  
+  if (isCourseLoading) return <h1>Loading... {`${courseError}`}</h1>;
   if (courseError) return <h1>Error loading course data: {`${courseError}`}</h1>;
 
   return (
-    <div>  
+    <div className="container">  
       <Banner title={courseData.title}/> 
-      {courseData?.courses ? <CourseList courses={courseData.courses} /> : <div>No courses available</div>}
+      <TermSelector selectedTerm={selectedTerm} setSelectedTerm={setSelectedTerm} />
+      {courseData?.courses ? (
+        <CourseList courses={courseData.courses} selectedTerm={selectedTerm} />
+      ) : (
+        <div>No courses available</div>
+      )}
     </div>
   );
 }
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <div className="container">
-      <Main />
-    </div>
+  <QueryClientProvider client={queryClient}> 
+    <Main /> 
   </QueryClientProvider>
 );
 
