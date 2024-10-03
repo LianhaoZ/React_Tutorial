@@ -8,16 +8,19 @@ const queryClient = new QueryClient();
 const Banner = ({ title }) => (
   <h1>{title}</h1>
 );
-
-const CourseCard = ({ course }) => (
-  <div className="course-card">
+ 
+const CourseCard = ({ course, isSelected, onToggleSelect }) => (
+  <div 
+    className={`course-card ${isSelected ? 'selected' : ''}`}
+    onClick={() => onToggleSelect(course.id)}
+  >
     <div className="course-number">{course.term} CS {course.number}</div>
     <div className="course-title">{course.title}</div>
-    <div className="course-time">{course.meets}</div>
+    <div className="course-time">{course.meets}</div> 
   </div>
 );
 
-const CourseList = ({ courses, selectedTerm }) => {
+const CourseList = ({ courses, selectedTerm, selectedCourses, onToggleSelect }) => {
   const filteredCourses = selectedTerm
     ? Object.entries(courses).filter(([id, course]) => course.term === selectedTerm)
     : Object.entries(courses);
@@ -25,7 +28,12 @@ const CourseList = ({ courses, selectedTerm }) => {
   return (
     <div className="course-list">
       {filteredCourses.map(([id, course]) => (
-        <CourseCard key={id} course={course} />
+        <CourseCard 
+          key={id} 
+          course={{...course, id}} 
+          isSelected={selectedCourses.includes(id)}
+          onToggleSelect={onToggleSelect}
+        />
       ))}
     </div>
   );
@@ -43,12 +51,21 @@ const TermSelector = ({ selectedTerm, setSelectedTerm }) => (
       </button>
     ))}
   </div>
-);
+); 
 
-const Main = () => { 
+const MainPage = () => { 
   const [selectedTerm, setSelectedTerm] = useState(null);
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [courseData, isCourseLoading, courseError] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
   
+  const toggleCourseSelection = (courseId) => {
+    setSelectedCourses(prev => 
+      prev.includes(courseId)
+        ? prev.filter(id => id !== courseId)
+        : [...prev, courseId]
+    );
+  };
+
   if (isCourseLoading) return <h1>Loading... {`${courseError}`}</h1>;
   if (courseError) return <h1>Error loading course data: {`${courseError}`}</h1>;
 
@@ -57,7 +74,12 @@ const Main = () => {
       <Banner title={courseData.title}/> 
       <TermSelector selectedTerm={selectedTerm} setSelectedTerm={setSelectedTerm} />
       {courseData?.courses ? (
-        <CourseList courses={courseData.courses} selectedTerm={selectedTerm} />
+        <CourseList 
+          courses={courseData.courses} 
+          selectedTerm={selectedTerm}
+          selectedCourses={selectedCourses}
+          onToggleSelect={toggleCourseSelection}
+        />
       ) : (
         <div>No courses available</div>
       )}
@@ -65,9 +87,10 @@ const Main = () => {
   );
 }
 
+
 const App = () => (
   <QueryClientProvider client={queryClient}> 
-    <Main /> 
+    <MainPage /> 
   </QueryClientProvider>
 );
 

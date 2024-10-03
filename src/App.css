@@ -99,3 +99,26 @@ h1 {
     width: 80%;
   }
 }
+
+.course-card.selected {
+  background-color: #e6f7ff;
+  border: 2px solid #1890ff;
+}
+
+/* .course-card .checkmark {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #1890ff;
+  font-size: 20px;
+} */
+
+.course-card {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.course-card:hover {
+  transform: scale(1.03);
+}
