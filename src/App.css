@@ -122,3 +122,127 @@ h1 {
 .course-card:hover {
   transform: scale(1.03);
 }
+
+.term-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.view-schedule-button {
+  background-color: #003366;
+  color: white;
+  border: 1px solid #003366;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 4px;
+}
+
+.view-schedule-button:hover {
+  background-color: #004d99;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.modal-title {
+  color: #003366;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.selected-course-item {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.selected-course-item:hover {
+  transform: scale(1.01);
+}
+
+.course-info {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.course-meets {
+  font-size: 0.8em;
+  color: #666;
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.no-courses-message {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+.no-courses-message p {
+  margin: 5px 0;
+}
+
+.modal-close {
+  background-color: #003366;
+  color: white;
+  border: 1px solid #003366;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 4px;
+  display: block;
+  margin-left: auto;
+}
+
+.modal-close:hover {
+  background-color: #004d99;
+}
+
+@media (max-width: 480px) {
+  .term-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-schedule-button {
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+    max-height: 90vh;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useJsonQuery } from './utilities/fetch';
+import ScheduleDialog from './components/ScheduleDialog';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -39,23 +40,30 @@ const CourseList = ({ courses, selectedTerm, selectedCourses, onToggleSelect }) 
   );
 };
 
-const TermSelector = ({ selectedTerm, setSelectedTerm }) => (
-  <div className="term-selector">
-    {['Fall', 'Winter', 'Spring'].map(term => (
-      <button
-        key={term}
-        className={`term-button ${selectedTerm === term ? 'selected' : ''}`}
-        onClick={() => setSelectedTerm(selectedTerm === term ? null : term)}
-      >
-        {term}
-      </button>
-    ))}
+const TermSelector = ({ selectedTerm, setSelectedTerm, onViewSchedule }) => (
+  <div className="term-bar">
+    <div className="term-selector">
+      {['Fall', 'Winter', 'Spring'].map(term => (
+        <button
+          key={term}
+          className={`term-button ${selectedTerm === term ? 'selected' : ''}`}
+          onClick={() => setSelectedTerm(selectedTerm === term ? null : term)}
+        >
+          {term}
+        </button>
+      ))}
+    </div>
+    <button className="view-schedule-button" onClick={onViewSchedule}>
+      View Schedule
+    </button>
   </div>
 ); 
+
 
 const MainPage = () => { 
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [isScheduleOpen, setIsScheduleOpen] = useState(false);
   const [courseData, isCourseLoading, courseError] = useJsonQuery('https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php');
   
   const toggleCourseSelection = (courseId) => {
@@ -72,17 +80,29 @@ const MainPage = () => {
   return (
     <div className="container">  
       <Banner title={courseData.title}/> 
-      <TermSelector selectedTerm={selectedTerm} setSelectedTerm={setSelectedTerm} />
+      <TermSelector 
+        selectedTerm={selectedTerm} 
+        setSelectedTerm={setSelectedTerm} 
+        onViewSchedule={() => setIsScheduleOpen(true)}
+      />
       {courseData?.courses ? (
         <CourseList 
           courses={courseData.courses} 
           selectedTerm={selectedTerm}
           selectedCourses={selectedCourses}
           onToggleSelect={toggleCourseSelection}
+          onViewSchedule={() => setIsScheduleOpen(true)}
         />
       ) : (
         <div>No courses available</div>
       )}
+
+      <ScheduleDialog 
+        isOpen={isScheduleOpen}
+        setIsOpen={setIsScheduleOpen}
+        selectedCourses={selectedCourses}
+        courses={courseData.courses}
+      />
     </div>
   );
 }
@@ -94,4 +114,4 @@ const App = () => (
   </QueryClientProvider>
 );
 
-export default App;
+export default App; 
