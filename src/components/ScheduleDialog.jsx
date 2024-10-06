@@ -1,9 +1,14 @@
-import '../App.css';
+import "../App.css";
 
-const ScheduleDialog = ({ isOpen, setIsOpen, selectedCourses, courses }) => {
+export const ScheduleDialog = ({
+  isOpen,
+  setIsOpen,
+  selectedCourses,
+  courses,
+}) => {
   if (!isOpen) return null;
-  
-  const selectedCourseDetails = selectedCourses.map(id => courses[id]);
+
+  const selectedCourseDetails = selectedCourses.map((id) => courses[id]);
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -18,9 +23,11 @@ const ScheduleDialog = ({ isOpen, setIsOpen, selectedCourses, courses }) => {
         <div className="modal-body">
           {selectedCourseDetails.length > 0 ? (
             <div className="selected-courses">
-              {selectedCourseDetails.map(course => (
+              {selectedCourseDetails.map((course) => (
                 <div key={course.number} className="selected-course-item">
-                  <div className="course-info">CS {course.number} - {course.title}</div>
+                  <div className="course-info">
+                    CS {course.number} - {course.title}
+                  </div>
                   <div className="course-meets">{course.meets}</div>
                 </div>
               ))}
@@ -39,6 +46,3 @@ const ScheduleDialog = ({ isOpen, setIsOpen, selectedCourses, courses }) => {
     </div>
   );
 };
-
-
-export default ScheduleDialog;
