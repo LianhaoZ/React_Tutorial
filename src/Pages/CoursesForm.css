@@ -94,3 +94,17 @@
   margin-left: 10px;
   color: #666;
 }
+
+.return-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.return-link:hover {
+  background-color: #45a049;
+}

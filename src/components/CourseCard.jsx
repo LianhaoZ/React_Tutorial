@@ -11,6 +11,7 @@ export const CourseCard = memo(
     selectedCourses,
     coursesData,
     onToggleSelect,
+    user,
   }) => {
     const hasConflict =
       !isSelected &&
@@ -31,13 +32,14 @@ export const CourseCard = memo(
         <div className="course-time">{course.meets}</div>
         {hasConflict && <div className="conflict-indicator">Time conflict</div>}
 
-        {hasConflict ? (
-          <span className="edit-link disabled">Edit</span>
-        ) : (
-          <Link to={`/course/${courseID}/edit`} className="edit-link">
-            Edit
-          </Link>
-        )}
+        {user &&
+          (hasConflict ? (
+            <span className="edit-link disabled">Edit</span>
+          ) : (
+            <Link to={`/course/${courseID}/edit`} className="edit-link">
+              Edit
+            </Link>
+          ))}
       </div>
     );
   }

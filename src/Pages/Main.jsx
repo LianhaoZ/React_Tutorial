@@ -2,7 +2,8 @@ import { ScheduleDialog, CourseCard } from "../components";
 import { useEffect, useState } from "react";
 import "../App.css";
 import { useJsonQuery } from "../utilities/fetch";
-import { useDbData } from "../utilities/fireBase";
+import { useDbData, useAuthState } from "../utilities/fireBase";
+import AuthBanner from "../components/Nav";
 
 const Banner = ({ title }) => <h1>{title}</h1>;
 
@@ -11,6 +12,7 @@ const CourseList = ({
   selectedTerm,
   selectedCourses,
   onToggleSelect,
+  user,
 }) => {
   const coursesData = courses || {};
   const filteredCourses = selectedTerm
@@ -30,6 +32,7 @@ const CourseList = ({
           selectedCourses={selectedCourses}
           coursesData={coursesData}
           onToggleSelect={onToggleSelect}
+          user={user}
         />
       ))}
     </div>
@@ -63,6 +66,8 @@ export const MainPage = () => {
   //   "https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php"
   // );
 
+  const [user] = useAuthState();
+
   const [courseData, error] = useDbData("courses");
   const [title, e] = useDbData("title");
 
@@ -87,8 +92,9 @@ export const MainPage = () => {
 
   return (
     <div className="container">
+      <AuthBanner title={title} />
       {/* <Banner title={courseData.title} /> */}
-      <Banner title={title} />
+      {/* <Banner title={title} /> */}
       <TermSelector
         selectedTerm={selectedTerm}
         setSelectedTerm={setSelectedTerm}
@@ -101,6 +107,7 @@ export const MainPage = () => {
           selectedCourses={selectedCourses}
           onToggleSelect={toggleCourseSelection}
           onViewSchedule={() => setIsScheduleOpen(true)}
+          user={user}
         />
       ) : (
         <div>No courses available</div>

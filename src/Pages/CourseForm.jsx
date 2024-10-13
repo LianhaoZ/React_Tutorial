@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import "./CoursesForm.css";
 import { format, parseDays, parseTime } from "../utilities/timeConflicts";
+import { useDbUpdate } from "../utilities/fireBase";
 
 const validateCourseData = (key, val) => {
   switch (key) {
@@ -87,9 +88,13 @@ export const CourseForm = ({ courses }) => {
     initialData
   );
 
+  const [updateData, result] = useDbUpdate(`/courses/${courseId}`);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // does nothing as of now
+    if (!errors.title && !errors.meets) {
+      updateData(values);
+    }
   };
 
   return (
@@ -131,6 +136,19 @@ export const CourseForm = ({ courses }) => {
         </div>
 
         <ButtonBar />
+
+        {result && result.message && (
+          <div className={`message ${result.error ? "error" : "success"}`}>
+            {result.message}
+            <div>
+              {!result.error && (
+                <Link to="/" className="return-link">
+                  Return to Course List
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </form>
     </div>
   );
