@@ -2,6 +2,7 @@ import { ScheduleDialog, CourseCard } from "../components";
 import { useEffect, useState } from "react";
 import "../App.css";
 import { useJsonQuery } from "../utilities/fetch";
+import { useDbData } from "../utilities/fireBase";
 
 const Banner = ({ title }) => <h1>{title}</h1>;
 
@@ -58,13 +59,23 @@ export const MainPage = () => {
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
-  const [courseData, isCourseLoading, courseError] = useJsonQuery(
-    "https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php"
-  );
+  // const [courseData, isCourseLoading, courseError] = useJsonQuery(
+  //   "https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php"
+  // );
 
-  if (isCourseLoading) return <h1>Loading... {`${courseError}`}</h1>;
-  if (courseError)
-    return <h1>Error loading course data: {`${courseError}`}</h1>;
+  const [courseData, error] = useDbData("courses");
+  const [title, e] = useDbData("title");
+
+  if (error || e) {
+    return <div>Error: {error.message}</div>;
+  }
+  if (!courseData || !title) {
+    return <div>Loading...</div>;
+  }
+
+  // if (isCourseLoading) return <h1>Loading... {`${courseError}`}</h1>;
+  // if (courseError)
+  //   return <h1>Error loading course data: {`${courseError}`}</h1>;
 
   const toggleCourseSelection = (courseId) => {
     setSelectedCourses((prev) =>
@@ -76,15 +87,16 @@ export const MainPage = () => {
 
   return (
     <div className="container">
-      <Banner title={courseData.title} />
+      {/* <Banner title={courseData.title} /> */}
+      <Banner title={title} />
       <TermSelector
         selectedTerm={selectedTerm}
         setSelectedTerm={setSelectedTerm}
         onViewSchedule={() => setIsScheduleOpen(true)}
       />
-      {courseData?.courses ? (
+      {courseData ? (
         <CourseList
-          courses={courseData.courses}
+          courses={courseData}
           selectedTerm={selectedTerm}
           selectedCourses={selectedCourses}
           onToggleSelect={toggleCourseSelection}
@@ -98,7 +110,7 @@ export const MainPage = () => {
         isOpen={isScheduleOpen}
         setIsOpen={setIsScheduleOpen}
         selectedCourses={selectedCourses}
-        courses={courseData.courses}
+        courses={courseData}
       />
     </div>
   );
