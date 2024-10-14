@@ -5,14 +5,13 @@ import { useJsonQuery } from "../utilities/fetch";
 import { useDbData, useAuthState } from "../utilities/fireBase";
 import AuthBanner from "../components/Nav";
 
-const Banner = ({ title }) => <h1>{title}</h1>;
-
 const CourseList = ({
   courses,
   selectedTerm,
   selectedCourses,
   onToggleSelect,
   user,
+  profile,
 }) => {
   const coursesData = courses || {};
   const filteredCourses = selectedTerm
@@ -33,6 +32,7 @@ const CourseList = ({
           coursesData={coursesData}
           onToggleSelect={onToggleSelect}
           user={user}
+          profile={profile}
         />
       ))}
     </div>
@@ -58,13 +58,10 @@ const TermSelector = ({ selectedTerm, setSelectedTerm, onViewSchedule }) => (
   </div>
 );
 
-export const MainPage = () => {
+export const MainPage = ({ profile }) => {
   const [selectedTerm, setSelectedTerm] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
-  // const [courseData, isCourseLoading, courseError] = useJsonQuery(
-  //   "https://courses.cs.northwestern.edu/394/guides/data/cs-courses.php"
-  // );
 
   const [user] = useAuthState();
 
@@ -78,10 +75,6 @@ export const MainPage = () => {
     return <div>Loading...</div>;
   }
 
-  // if (isCourseLoading) return <h1>Loading... {`${courseError}`}</h1>;
-  // if (courseError)
-  //   return <h1>Error loading course data: {`${courseError}`}</h1>;
-
   const toggleCourseSelection = (courseId) => {
     setSelectedCourses((prev) =>
       prev.includes(courseId)
@@ -93,8 +86,6 @@ export const MainPage = () => {
   return (
     <div className="container">
       <AuthBanner title={title} />
-      {/* <Banner title={courseData.title} /> */}
-      {/* <Banner title={title} /> */}
       <TermSelector
         selectedTerm={selectedTerm}
         setSelectedTerm={setSelectedTerm}
@@ -108,6 +99,7 @@ export const MainPage = () => {
           onToggleSelect={toggleCourseSelection}
           onViewSchedule={() => setIsScheduleOpen(true)}
           user={user}
+          profile={profile}
         />
       ) : (
         <div>No courses available</div>
